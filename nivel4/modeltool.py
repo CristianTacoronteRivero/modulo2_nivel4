@@ -105,8 +105,6 @@ class SuperPipeline:
             pipelines=[pipe_num, pipe_cat],\
             cols=[df.iloc[:, :-1].columns, df.iloc[:, :-1].columns],\
             estimator=RandomForestClassifier())
-
-    sp.export_pipeline("model", pipeline)
         """
         lista_trans = list()
         for n, p, c in zip(name_pipelines, pipelines, cols):
