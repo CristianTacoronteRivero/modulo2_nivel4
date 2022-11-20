@@ -1,0 +1,8 @@
+{
+    "python.formatting.provider": "black",
+    "editor.formatOnSave": true,
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "autoDocstring.docstringFormat": "sphinx",
+    "python.testing.pytestEnabled":true
+}
