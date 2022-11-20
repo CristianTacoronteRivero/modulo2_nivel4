@@ -92,7 +92,7 @@ class SuperPipeline:
         :param y: _description_, defaults to None
         :type y: _type_, optional
         :return: _description_
-        :rtype: _type_
+        :rtype: _type
 
         >>> from nivel4.modeltool import SuperPipeline
         >>> import pandas as pd

@@ -1,0 +1,51 @@
+name: MLOPS NIVEL 4 # Nombre del workflow
+on:
+  push: # FILTRO
+    tags: # donde el tags contiene la siguiente expresion regular
+      - "v**" # solo se ejecuta si el tag comienza con v...
+
+jobs: # jobs 1
+  building:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Action
+        uses: actions/checkout@v3 # duplicamos el repositorio que estamos subiendp
+
+      - name: Install Python
+        uses: actions/setup-python@v4 # montamos python
+        with:
+          python-version: "3.10" # con esta version
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+
+      - name: Install dependencies
+        run: poetry install # instalamos poetry y todas las dependencias que hemos ido metiendo
+
+      - name: Run pytest and  generate coverage file
+        run: poetry run pytest --junitxml=jest-junit.xml --cov=. --cov-report=xml --cov-report=lcov # --cov en la carpeta tariml
+
+      - name: Test report # comenzamos con el testing
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Test
+          path: jest-junit.xml
+          reporter: java-junit
+
+      - name: Coverage report
+        uses: devmasx/coverage-check-action@v1.2.0
+        with:
+          type: lcov
+          result_path: coverage.lcov # path
+          min_coverage: 60
+          token: ${{ github.token}}
+
+      - name: Poetry build
+        run: poetry build # si funciona el testing creo la dist y lo lanzo!
+
+      - name: Publish to GitHub
+        if: startswith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ github.workspace }}/dist/* # subo todo lo que esta dentro del dist!
